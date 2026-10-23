@@ -1,0 +1,34 @@
+# Public deployment template. These are PAID compute plans; review Render pricing before creation.
+# No resources are created until you connect your repository and approve the Blueprint in Render.
+services:
+  - type: web
+    name: salah-worksheet
+    runtime: node
+    region: frankfurt
+    plan: 0.5c-512mb
+    buildCommand: npm ci --include=dev && npm run build
+    preDeployCommand: npx drizzle-kit migrate --config=drizzle.config.ts
+    startCommand: npm run start -- --hostname 0.0.0.0
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: salah-worksheet-db
+          property: connectionString
+      - key: TEACHER_PASSWORD
+        sync: false
+      - key: AUTH_SECRET
+        generateValue: true
+
+databases:
+  - name: salah-worksheet-db
+    region: frankfurt
+    plan: 0.1c-256mb
+    diskSizeGB: 1
+    databaseName: salah_worksheet
+    user: salah_worksheet
+    ipAllowList: []
