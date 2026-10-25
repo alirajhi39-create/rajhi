@@ -1,4 +1,0 @@
-@import "tailwindcss";
-
-/* أنماط لوحة المعلم معزولة ببادئة dt- حتى لا تتعارض مع أنماط درس التيمم الأصلية */
-@import "./teacher/teacher.css";
